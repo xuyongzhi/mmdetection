@@ -334,6 +334,12 @@ class BaseDetector(BaseModule, metaclass=ABCMeta):
         # if out_file specified, do not show image in window
         if out_file is not None:
             show = False
+
+        if 1:
+            # count the number of sheeps
+            # import pdb; pdb.set_trace()
+            pass
+
         # draw bounding boxes
         img = imshow_det_bboxes(
             img,
