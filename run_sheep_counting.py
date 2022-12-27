@@ -44,7 +44,6 @@ def main():
     main_video(args)
 
 def main_video(args):
-
     out_dir = ROOT_DIR / 'output' / MODEL_NAME
     if not out_dir.exists():
         out_dir.mkdir(parents=True, exist_ok=True)

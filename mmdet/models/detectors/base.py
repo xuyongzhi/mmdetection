@@ -2,7 +2,7 @@
 from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
 
-import mmcv
+import mmcv, cv2
 import numpy as np
 import torch
 import torch.distributed as dist
@@ -337,8 +337,31 @@ class BaseDetector(BaseModule, metaclass=ABCMeta):
 
         if 1:
             # count the number of sheeps
+            # 0: person
+            # 18: sheep
+            # 19: cow
+            nums = {}
+            key_labels = [18,19,0]
+            for l in key_labels:
+                c = self.CLASSES[l]
+                nums[c] = 0
+
+            for i in range(len(labels)):
+                l_i = labels[i]
+                if bboxes[i,4] < score_thr:
+                    continue
+                if l_i in key_labels:
+                    c_i = self.CLASSES[l_i]
+                    nums[c_i] += 1
             # import pdb; pdb.set_trace()
-            pass
+            num_str = ''
+            for c,n in nums.items():
+                num_str += f'{c}:{n}  '
+
+            fontScale = 1
+            thickness = 2
+            img = cv2.putText(img, num_str, (10,50), cv2.FONT_HERSHEY_SIMPLEX,
+                              fontScale, (0,0,255), thickness)
 
         # draw bounding boxes
         img = imshow_det_bboxes(
