@@ -341,7 +341,7 @@ class BaseDetector(BaseModule, metaclass=ABCMeta):
             # 18: sheep
             # 19: cow
             nums = {}
-            key_labels = [18,19,0]
+            key_labels = [18,19]
             for l in key_labels:
                 c = self.CLASSES[l]
                 nums[c] = 0
@@ -353,6 +353,8 @@ class BaseDetector(BaseModule, metaclass=ABCMeta):
                 if l_i in key_labels:
                     c_i = self.CLASSES[l_i]
                     nums[c_i] += 1
+            nums['sheep'] += nums['cow']
+            del nums['cow']
             # import pdb; pdb.set_trace()
             num_str = ''
             for c,n in nums.items():
@@ -381,8 +383,10 @@ class BaseDetector(BaseModule, metaclass=ABCMeta):
             wait_time=wait_time,
             out_file=out_file)
 
+        num_sheep = nums['sheep']
         if not (show or out_file):
-            return img
+            return img, nums
+        return nums
 
     def onnx_export(self, img, img_metas):
         raise NotImplementedError(f'{self.__class__.__name__} does '

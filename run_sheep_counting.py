@@ -61,9 +61,13 @@ def detect_1_video(args):
             args.out, fourcc, video_reader.fps,
             (video_reader.width, video_reader.height))
 
+    i = -1
     for frame in mmcv.track_iter_progress(video_reader):
+        i += 1
+        if i%5!=0:
+            continue
         result = inference_detector(model, frame)
-        frame = model.show_result(frame, result, score_thr=args.score_thr)
+        frame, nums = model.show_result(frame, result, score_thr=args.score_thr)
         if args.show:
             cv2.namedWindow('video', 0)
             mmcv.imshow(frame, 'video', args.wait_time)
